@@ -4,11 +4,21 @@ var Word = require('./word.js');
 
 var pastGuesses = [];
 
+var schema = {
+	properties: {
+		guessLetter: {
+			pattern: /[a-zA-Z]/,
+			message: 'Name must be only letters',
+			required: true
+		},
+	}
+};
+
 // Initializes the Prompt //
 prompt.start();
 
 game = {
-	wordBank : ["aabcc", "def", "ghi"],
+	wordBank : ["ferrari", "toyota", "mercedes", "tesla", "nissan", "honda", "hyundai", "chevrolet", "ford", "audi"],
 	wordsWon : 0,
 	guessesRemaining : 10, //per word
 	currentWrd : null, //the word object
@@ -20,10 +30,9 @@ game = {
 		this.currentWrd = new Word (this.wordBank[Math.floor(Math.random()* this.wordBank.length)]);
 
 		this.currentWrd.getLets(); //populate currentWrd (made from Word constructor function) object with letters
-
+		console.log("Welcome to Hangman! Please guess a letter.\n");
+		console.log(this.currentWrd.wordRender()+ "\n");
 		this.keepPromptingUser();
-		console.log("Begin guessing letters");
-		console.log()
 
 	}, 
 	resetGuessesRemaining : function(){
@@ -32,7 +41,7 @@ game = {
 	keepPromptingUser : function(){
 		var self = this;
 
-		prompt.get(['guessLetter'], function(err, result) {
+		prompt.get(schema, function (err, result) {
 		    // result is an object like this: { guessLetter: 'f' }
 		    // console.log(result);
 		    
